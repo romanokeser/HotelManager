@@ -12,9 +12,11 @@ public class SimpleDB : MonoBehaviour
     private void Start()
     {
         CreateDB();
-        AddWeapon("novi gun", 6);
-        AddWeapon("drugi gun", 41);
-        AddWeapon("lorem ipsum", 2);
+        //AddWeapon("novi gun", 6);
+        //AddWeapon("drugi gun", 41);
+        //AddWeapon("lorem ipsum", 2);
+
+        DisplayWeapons();
     }
 
     private void CreateDB()
@@ -23,7 +25,7 @@ public class SimpleDB : MonoBehaviour
         {
             connection.Open();
 
-            using(var command = connection.CreateCommand())
+            using (var command = connection.CreateCommand())
             {
                 command.CommandText = "CREATE TABLE IF NOT EXISTS weapons (name VARCHAR(20), damage INT);";
                 command.ExecuteNonQuery();
@@ -40,7 +42,7 @@ public class SimpleDB : MonoBehaviour
 
             using (var command = connection.CreateCommand())
             {
-                command.CommandText = "INSERT INTO weapons (name, damage) VALUES ('" + weaponName +"', '" + weaponDamage + "');";
+                command.CommandText = "INSERT INTO weapons (name, damage) VALUES ('" + weaponName + "', '" + weaponDamage + "');";
                 command.ExecuteNonQuery();
             }
             connection.Close();
@@ -51,19 +53,19 @@ public class SimpleDB : MonoBehaviour
     {
         using (var connection = new SqliteConnection(dbname))
         {
+            connection.Open();
             using (var command = connection.CreateCommand())
             {
                 command.CommandText = "SELECT * FROM weapons;";
 
-                using(IDataReader reader = command.ExecuteReader())
+                using (IDataReader reader = command.ExecuteReader())
                 {
                     while (reader.Read())
                     {
                         Debug.Log("Name " + reader["name"] + "\tDamage: " + reader["damage"]);
-                        reader.Close();
                     }
+                    reader.Close();
                 }
-
                 connection.Close();
             }
         }
